@@ -1,352 +1,414 @@
 body {
-  margin          : 0;
-  font-family     : "Poppins", Arial, sans-serif;
-  display         : flex;
-  height          : 100vh;
+  margin: 0;
+  font-family: "Poppins", Arial, sans-serif;
+  display: flex;
+  height: 100vh;
   background-color: #eef2f7;
+  overflow: hidden;
 }
 
 /* Sidebar */
 .sidebar {
-  width           : 260px;
+  width: 260px;
   background-color: #2294F2;
-  color           : white;
-  display         : flex;
-  flex-direction  : column;
-  align-items     : center;
-  box-shadow      : 3px 0 10px rgba(0, 0, 0, 0.2);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
 
 .logo-container {
-  width          : 100%;
-  background     : white;
-  display        : flex;
+  width: 100%;
+  background: white;
+  display: flex;
   justify-content: center;
-  align-items    : center;
-  padding        : 20px 0;
-  border-bottom  : 2px solid rgba(0, 0, 0, 0.1);
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .logo-img {
-  width : 80%;
+  width: 80%;
   height: auto;
 }
 
 .nav-item {
-  width        : 90%;
-  padding      : 16px 20px;
-  margin       : 8px 0;
-  font-size    : 18px;
-  font-weight  : 600;
-  cursor       : pointer;
-  border-radius: 10px;
-  color        : #ecf6ff;
-  transition   : all 0.3s ease;
-  display      : flex;
-  align-items  : center;
-  gap          : 12px;
+  width: 85%;
+  padding: 16px 20px;
+  margin: 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 12px;
+  color: #ecf6ff;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .nav-item.active {
   background: #fff;
-  color     : #2294F2;
+  color: #2294F2;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* Main Content */
 .main-content {
-  flex      : 1;
-  padding   : 40px 60px;
+  flex: 1;
+  padding: 0 60px 40px 60px;
   overflow-y: auto;
+  position: relative;
+}
+
+/* Top Bar & Connection Status */
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 0;
+}
+
+#ws-status {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.3s;
+}
+
+.ws-connected {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.ws-disconnected {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* Headers */
+header {
+  margin-bottom: 30px;
+}
+header h1 {
+  color: #333;
+  margin-bottom: 5px;
+}
+header p {
+  color: #666;
+  margin-top: 0;
 }
 
 /* Home Gauges */
 .gauges-container {
-  display        : flex;
-  flex-wrap      : wrap;
-  gap            : 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
   justify-content: center;
 }
 
 .gauge-card {
-  background   : white;
+  background: white;
   border-radius: 16px;
-  box-shadow   : 0 6px 16px rgba(0, 0, 0, 0.1);
-  padding      : 30px;
-  text-align   : center;
-  width        : 300px;
-  transition   : transform 0.3s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  text-align: center;
+  width: 320px;
+  transition: transform 0.3s ease;
 }
 
-#gauge_temp,
-#gauge_humi {
-  width : 260px;
-  height: 260px;
+.gauge-card:hover {
+  transform: translateY(-5px);
+}
+
+#gauge_temp, #gauge_humi {
+  width: 280px;
+  height: 240px;
   margin: 0 auto;
 }
 
 /* Device Page */
 .device-list {
-  display        : flex;
-  flex-wrap      : wrap;
-  gap            : 25px;
-  margin-top     : 30px;
-  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: flex-start;
 }
 
 .device-card {
-  background   : #fff;
+  background: #fff;
   border-radius: 20px;
-  box-shadow   : 0 5px 20px rgba(0, 0, 0, 0.1);
-  width        : 240px;
-  padding      : 25px 20px;
-  text-align   : center;
-  position     : relative;
-  transition   : all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  width: 220px;
+  padding: 25px 20px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
 }
 
 .device-card:hover {
-  transform : translateY(-5px);
-  box-shadow: 0 8px 25px rgba(34, 148, 242, 0.25);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(34, 148, 242, 0.2);
 }
 
 .device-icon {
-  font-size    : 36px;
-  color        : #2294F2;
-  margin-bottom: 10px;
+  font-size: 36px;
+  color: #888;
+  margin-bottom: 15px;
+  transition: 0.3s;
 }
 
+.device-card.active-card .device-icon {
+  color: #f1c40f; /* Đổi màu vàng khi đèn sáng */
+  text-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
+}
+
+.device-card h3 {
+  margin: 10px 0 5px 0;
+  color: #333;
+}
+
+.device-card p {
+  margin: 0 0 20px 0;
+  color: #777;
+  font-size: 14px;
+}
+
+/* Toggle Switch Style Button */
 .toggle-btn {
-  width        : 100%;
-  border       : none;
+  width: 100%;
+  border: none;
   border-radius: 12px;
-  padding      : 12px;
-  font-weight  : 600;
-  font-size    : 16px;
-  cursor       : pointer;
-  background   : #e3e3e3;
-  transition   : 0.3s;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  background: #e0e0e0;
+  color: #555;
+  transition: 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-btn:hover {
+  background: #d5d5d5;
 }
 
 .toggle-btn.on {
-  background: linear-gradient(90deg, #2294F2, #1b7fe0);
-  color     : white;
-  box-shadow: 0 4px 12px rgba(34, 148, 242, 0.4);
+  background: linear-gradient(90deg, #2ecc71, #27ae60);
+  color: white;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+}
+
+.toggle-btn.waiting {
+  background: #f39c12;
+  color: white;
+  cursor: wait;
 }
 
 .delete-icon {
   position: absolute;
-  top     : 10px;
-  right   : 12px;
-  color   : #e74c3c;
-  cursor  : pointer;
+  top: 15px;
+  right: 15px;
+  color: #e74c3c;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+.delete-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .add-relay-btn {
-  position     : fixed;
-  bottom       : 35px;
-  right        : 35px;
-  background   : linear-gradient(135deg, #2294F2, #1a75e6);
-  color        : white;
-  border       : none;
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  background: linear-gradient(135deg, #2294F2, #1a75e6);
+  color: white;
+  border: none;
   border-radius: 50%;
-  width        : 80px;
-  /* to hơn chút */
-  height       : 80px;
-  font-size    : 34px;
-  /* icon lớn hơn */
-  cursor       : pointer;
-  box-shadow   : 0 6px 20px rgba(0, 0, 0, 0.25);
-  transition   : 0.3s;
+  width: 70px;
+  height: 70px;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(34, 148, 242, 0.4);
+  transition: 0.3s;
+  z-index: 50;
 }
 
 .add-relay-btn:hover {
-  transform : scale(1.08);
-  box-shadow: 0 8px 25px rgba(34, 148, 242, 0.4);
+  transform: scale(1.08) rotate(90deg);
 }
-
 
 /* Settings */
 .settings-section {
-  display        : flex;
+  display: flex;
   justify-content: center;
-  align-items    : flex-start;
-  padding-top    : 40px;
-  height         : 100%;
+  align-items: flex-start;
+  padding-top: 20px;
 }
 
 .settings-card {
-  background   : white;
-  padding      : 50px 60px;
+  background: white;
+  padding: 40px 50px;
   border-radius: 20px;
-  box-shadow   : 0 10px 25px rgba(0, 0, 0, 0.15);
-  width        : 850px;
-  /* ✅ to hơn */
-  max-width    : 95%;
-  text-align   : center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
 }
 
 .settings-card h2 {
-  color        : #2294F2;
-  margin-bottom: 15px;
+  color: #2294F2;
+  margin-bottom: 10px;
 }
 
 .settings-card p {
-  color        : #666;
-  margin-bottom: 35px;
-  font-size    : 15px;
+  color: #666;
+  margin-bottom: 30px;
 }
 
-/* FORM STYLE — vertical layout with spacing */
 #settingsForm {
-  width         : 100%;
-  display       : flex;
+  display: flex;
   flex-direction: column;
-  align-items   : center;
+  align-items: center;
 }
 
-/* mỗi input-group là 1 dòng, cách nhau */
 .input-group {
-  position     : relative;
-  width        : 98%;
-  /* ✅ rộng gần hết khung */
-  max-width    : 760px;
-  /* ✅ dài hơn hẳn */
+  position: relative;
+  width: 100%;
   margin-bottom: 20px;
-  /* ✅ tạo khoảng cách giữa các dòng */
 }
 
 .input-group i {
-  position : absolute;
-  top      : 50%;
-  left     : 18px;
+  position: absolute;
+  top: 50%;
+  left: 20px;
   transform: translateY(-50%);
-  color    : #2294F2;
+  color: #2294F2;
   font-size: 18px;
 }
 
 .input-group input {
-  width           : 100%;
-  padding         : 16px 18px 16px 54px;
-  border-radius   : 14px;
-  border          : 1.5px solid #ccc;
-  font-size       : 17px;
-  background-color: #f9f9f9;
-  transition      : all 0.3s ease;
-  box-sizing      : border-box;
+  width: 100%;
+  padding: 16px 20px 16px 50px;
+  border-radius: 12px;
+  border: 1.5px solid #ddd;
+  font-size: 16px;
+  background-color: #fafafa;
+  transition: 0.3s;
+  box-sizing: border-box;
 }
 
 .input-group input:focus {
-  border-color    : #2294F2;
-  box-shadow      : 0 0 10px rgba(34, 148, 242, 0.25);
+  border-color: #2294F2;
+  box-shadow: 0 0 0 4px rgba(34, 148, 242, 0.1);
   background-color: #fff;
+  outline: none;
 }
 
-/* Save Button */
 .btn-save {
-  margin-top   : 25px;
-  background   : linear-gradient(90deg, #2294F2, #1b7fe0);
-  color        : white;
-  border       : none;
+  margin-top: 15px;
+  background: linear-gradient(90deg, #2294F2, #1b7fe0);
+  color: white;
+  border: none;
   border-radius: 12px;
-  padding      : 16px 44px;
-  font-size    : 18px;
-  font-weight  : 600;
-  cursor       : pointer;
-  box-shadow   : 0 6px 18px rgba(34, 148, 242, 0.45);
-  transition   : all 0.3s ease;
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(34, 148, 242, 0.3);
+  transition: 0.3s;
 }
 
 .btn-save:hover {
-  transform : translateY(-2px);
-  box-shadow: 0 8px 22px rgba(34, 148, 242, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(34, 148, 242, 0.4);
 }
-
 
 /* Dialog */
 .dialog-overlay {
-  position       : fixed;
-  top            : 0;
-  left           : 0;
-  right          : 0;
-  bottom         : 0;
-  background     : rgba(0, 0, 0, 0.5);
-  display        : flex;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
   justify-content: center;
-  align-items    : center;
-  z-index        : 100;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
 }
 
 .dialog {
-  background   : white;
+  background: white;
   border-radius: 20px;
-  padding      : 35px 30px;
-  width        : 380px;
-  text-align   : center;
-  box-shadow   : 0 12px 35px rgba(0, 0, 0, 0.25);
-  animation    : popIn 0.25s ease;
+  padding: 35px 30px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
 }
 
 .dialog h3 {
   font-size: 22px;
-  color    : #2294F2;
+  color: #2294F2;
+  margin-top: 0;
 }
 
 .dialog.warning h3 {
   color: #e74c3c;
 }
 
-.dialog p {
-  color    : #666;
-  font-size: 15px;
-}
-
 .input-field input {
-  width        : 90%;
-  padding      : 12px;
-  border       : 1.5px solid #ccc;
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid #ddd;
   border-radius: 10px;
   margin-bottom: 15px;
+  box-sizing: border-box;
 }
 
 .dialog-buttons {
-  display        : flex;
+  display: flex;
   justify-content: center;
-  gap            : 15px;
+  gap: 15px;
+  margin-top: 10px;
 }
 
 .dialog-buttons button {
-  padding      : 10px 22px;
-  border       : none;
+  padding: 10px 25px;
+  border: none;
   border-radius: 10px;
-  font-weight  : 600;
-  cursor       : pointer;
-  transition   : 0.3s;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.dialog-buttons .confirm {
-  background: linear-gradient(90deg, #2294F2, #1b7fe0);
-  color     : white;
+.dialog-buttons .confirm { background: #2294F2; color: white; }
+.dialog-buttons .confirm:hover { background: #1a75e6; }
+.dialog-buttons .danger { background: #e74c3c; color: white; }
+.dialog-buttons .danger:hover { background: #c0392b; }
+.dialog-buttons .cancel { background: #f1f1f1; color: #555; }
+.dialog-buttons .cancel:hover { background: #e0e0e0; }
+
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
 }
 
-.dialog-buttons .danger {
-  background: #e74c3c;
-  color     : white;
-}
-
-.dialog-buttons .cancel {
-  background: #ddd;
-  color     : #333;
-}
-
-@keyframes popIn {
-  from {
-    transform: scale(0.8);
-    opacity  : 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity  : 1;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

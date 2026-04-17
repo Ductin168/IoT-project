@@ -53,7 +53,7 @@ void connnectWSV()
     server.on("/styles.css", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(LittleFS, "/styles.css", "text/css"); });
     server.begin();
-    ElegantOTA.begin(&server);
+    ElegantOTA.begin(&server); // Start ElegantOTA on the same server  
     webserver_isrunning = true;
 }
 
