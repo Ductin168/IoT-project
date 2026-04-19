@@ -17,15 +17,24 @@
 void setup()
 {
   Serial.begin(115200);
-  check_info_File(0);
+  // check_info_File(0);
   // task 1 2 3
+  static SystemResources res;
+  res.xSensorQueue = xQueueCreate(5, sizeof(struct SensorData));
+  res.xLedSem = xQueueCreate(5, sizeof(int));
+  res.xNeoSem = xQueueCreate(5, sizeof(int));
+    
+    // Lưu ý: Trong RTOS, kiểm tra NULL sau khi tạo là bắt buộc
+  if (res.xSensorQueue == NULL || res.xLedSem == NULL) {
+      Serial.println("Error: Could not create RTOS resources!");
+  }
 
-  xTaskCreate(led_blinky, "Task LED Blink", 2048, NULL, 2, NULL);
-  xTaskCreate(neo_blinky, "Task NEO Blink", 2048, NULL, 2, NULL);
-  xTaskCreate(temp_humi_monitor, "Task TEMP HUMI Monitor", 2048, NULL, 2, NULL);
+  xTaskCreate(led_blinky, "Task LED Blink", 2048, &res, 2, NULL);
+  xTaskCreate(neo_blinky, "Task NEO Blink", 2048, &res, 2, NULL);
+  xTaskCreate(temp_humi_monitor, "Task TEMP HUMI Monitor", 2048, &res, 2, NULL);
   // xTaskCreate(main_server_task, "Task Main Server" ,8192  ,NULL  ,2 , NULL);
   // xTaskCreate( tiny_ml_task, "Tiny ML Task" ,2048  ,NULL  ,2 , NULL);
-  xTaskCreate(coreiot_task, "CoreIOT Task" ,4096  ,NULL  ,2 , NULL);
+  // xTaskCreate(coreiot_task, "CoreIOT Task" ,4096  ,NULL  ,2 , NULL);
   // xTaskCreate(Task_Toogle_BOOT, "Task_Toogle_BOOT", 4096, NULL, 2, NULL);
 }
 
