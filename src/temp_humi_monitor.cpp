@@ -66,7 +66,7 @@ void temp_humi_monitor(void *pvParameters){
             lcd.display();
             //isTextVisible = true;
             lcd.clear();
-            lcd.setCursor(0, 0);
+            lcd.setCursor(0, 1);
 
             if (status_temp == 2 || status_humi == 2) 
             {
@@ -76,17 +76,24 @@ void temp_humi_monitor(void *pvParameters){
             else if (status_temp == 1 || status_humi == 1) 
             {
                 lcd.print("STATE: WARNING");
-                lcd.blink(); // Nháy con trỏ tại chữ Warning
+                lcd.blink(); // 
                 //xTimeout = portMAX_DELAY;
             }
             else 
             {
                 lcd.print("STATE: NORMAL");
-                lcd.noBlink(); // Nháy con trỏ tại chữ Warning
+                lcd.noBlink(); // 
                 //xTimeout = portMAX_DELAY;
             }
-            lcd.setCursor(0, 1);
-            lcd.printf("T:%.1f %cC H:%.1f%%", data.temp, 223, data.humid);
+            lcd.setCursor(0, 0);
+            //lcd.printf("T:", data.temp);
+            //lcd.printf("T:%.1f %cC H:%.1f%%", data.temp, 223, data.humid);
+            lcd.print("T:");
+            lcd.print(data.temp, 1); // ,1 để lấy 1 chữ số thập phân
+            lcd.write(223);          // In ký tự độ C (mã 223)
+            lcd.print("C H:");
+            lcd.print(data.humid, 1);
+            lcd.print("%");
             //lcd.printf("T:%.1f C H:%.1f%%", data.temp, data.humid);
             // if (data.status == 2) {
             //     if (isTextVisible) lcd.noDisplay();
@@ -96,7 +103,7 @@ void temp_humi_monitor(void *pvParameters){
 
             // semaphore or queue
             if (res->xSensorQueue != NULL) xQueueSend(res->xSensorQueue, &data, pdMS_TO_TICKS(100));
-            if (res->xLedSem != NULL) xQueueSend(res->xLedSem, &status_temp, pdMS_TO_TICKS(100));
+            if (res->xLedSem != NULL) xQueueSend(res->xLedSem, &status_humi, pdMS_TO_TICKS(100));
             if (res->xNeoSem != NULL) xQueueSend(res->xNeoSem, &status_humi, pdMS_TO_TICKS(100));
 
             //xSemaphoreGive(res->xLedSem);

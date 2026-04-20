@@ -12,9 +12,9 @@ void neo_blinky(void *pvParameters){
 
     while(1) 
     {        
-        if (xQueueReceive(res->xLedSem, &status, portMAX_DELAY)) 
+        if (xQueueReceive(res->xNeoSem, &status, portMAX_DELAY)) 
         {
-            if (status == 2) strip.fill(strip.Color(100, 0, 200)); // tím
+            if (status == 2) strip.fill(strip.Color(50, 0, 100)); // tím
             else if (status == 1) strip.fill(strip.Color(0, 0, 150)); // blue đậm
             else strip.fill(strip.Color(0, 255, 0)); // Green
             strip.show();

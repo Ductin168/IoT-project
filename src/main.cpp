@@ -40,16 +40,16 @@ void setup()
 
 void loop()
 {
-  if (check_info_File(1))
-  {
-    if (!Wifi_reconnect())
-    {
-      Webserver_stop();
-    }
-    else
-    {
-      //CORE_IOT_reconnect();
-    }
-  }
-  Webserver_reconnect();
+  // if (check_info_File(1))
+  // {
+  //   if (!Wifi_reconnect())
+  //   {
+  //     Webserver_stop();
+  //   }
+  //   else
+  //   {
+  //     //CORE_IOT_reconnect();
+  //   }
+  // }
+  // Webserver_reconnect();
 }
