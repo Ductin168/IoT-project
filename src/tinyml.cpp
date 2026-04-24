@@ -6,26 +6,26 @@
 #define HUMI_MIN 0.0f
 #define HUMI_MAX 100.0f
 
-float normalize(float x, float min, float max) {
+float normalize(float x, float min, float max)
+{
     return (x - min) / (max - min);
 }
 
-typedef struct {
+typedef struct
+{
     float temp;
     float humi;
 } SensorData;
 
-
-
 namespace
 {
     tflite::ErrorReporter *tf_error_reporter = nullptr;
-    const tflite::Model *tf_model = nullptr; 
+    const tflite::Model *tf_model = nullptr;
     tflite::MicroInterpreter *tf_interpreter = nullptr;
     TfLiteTensor *tf_input = nullptr;
     TfLiteTensor *tf_output = nullptr;
-    
-    constexpr int kTensorArenaSize = 16 * 1024; 
+
+    constexpr int kTensorArenaSize = 16 * 1024;
     uint8_t tensor_arena[kTensorArenaSize];
 }
 
@@ -35,8 +35,8 @@ void setupTinyML()
     static tflite::MicroErrorReporter micro_error_reporter;
     tf_error_reporter = &micro_error_reporter;
 
-    tf_model = tflite::GetModel(smart_env_model_tflitel); 
-    
+    tf_model = tflite::GetModel(smart_env_model_tflite);
+
     if (tf_model->version() != TFLITE_SCHEMA_VERSION)
     {
         tf_error_reporter->Report("Model version mismatch!");
@@ -73,7 +73,6 @@ void tiny_ml_task(void *pvParameters)
             tf_input->data.f[0] = normalize(data.temp, TEMP_MIN, TEMP_MAX);
             tf_input->data.f[1] = normalize(data.humi, HUMI_MIN, HUMI_MAX);
 
-            // thực hiện suy luận
             unsigned long start = millis();
 
             if (tf_interpreter->Invoke() == kTfLiteOk)
@@ -83,52 +82,61 @@ void tiny_ml_task(void *pvParameters)
                 Serial.print(end - start);
                 Serial.println(" ms");
 
-                // dự đoán nhãn
-                int predicted_label = 0;
-                float max_val = tf_output->data.f[0];
+                // ===== OUTPUT =====
+                float temp_score = tf_output->data.f[0];
+                float humi_score = tf_output->data.f[1];
 
-                for (int i = 1; i < 3; i++)   
-                {
-                    if (tf_output->data.f[i] > max_val)
-                    {
-                        max_val = tf_output->data.f[i];
-                        predicted_label = i;
-                    }
-                }
+                int temp_pred = temp_score > 0.5f ? 1 : 0;
+                int humi_pred = humi_score > 0.5f ? 1 : 0;
 
-                // nhãn dự đoán theo quy tắc
-                int rule_label = 0;
+                // ===== RULE (GROUND TRUTH) =====
+                int temp_rule = (data.temp >= 30) ? 1 : 0;
+                int humi_rule = (data.humi >= 75) ? 1 : 0;
 
-                if (data.temp > 30) rule_label = 1;
-                else if (data.humi > 75) rule_label = 2;
-                else rule_label = 0;
-
-                // độ chính xác 
+                // ===== ACCURACY =====
                 static int total = 0;
                 static int correct = 0;
 
-                if (predicted_label == rule_label) correct++;
+                if (temp_pred == temp_rule && humi_pred == humi_rule)
+                    correct++;
+
                 total++;
 
                 Serial.print("Accuracy: ");
                 Serial.println((float)correct / total);
 
+                // ===== LOG =====
                 Serial.println("===== RESULT =====");
 
-                Serial.print("AI: ");
-                Serial.print(predicted_label);
+                Serial.print("Temp Score: ");
+                Serial.print(temp_score);
+                Serial.print(" → ");
+                Serial.println(temp_pred ? "HOT" : "NORMAL");
 
-                Serial.print(" | Rule: ");
-                Serial.println(rule_label);
+                Serial.print("Humi Score: ");
+                Serial.print(humi_score);
+                Serial.print(" → ");
+                Serial.println(humi_pred ? "HIGH" : "NORMAL");
 
-                Serial.print("Confidence: ");
-                Serial.println(max_val);
+                Serial.print("Rule Temp: ");
+                Serial.println(temp_rule);
 
-                switch (predicted_label)
+                Serial.print("Rule Humi: ");
+                Serial.println(humi_rule);
+
+                if (temp_pred == 1)
                 {
-                    case 0: Serial.println("Normal"); break;
-                    case 1: Serial.println("Hot → Turn on Fan"); break;
-                    case 2: Serial.println("Humid → Warning"); break;
+                    Serial.println("Turn ON Fan");
+                }
+
+                if (humi_pred == 1)
+                {
+                    Serial.println("Humidity Warning");
+                }
+
+                if (temp_pred == 0 && humi_pred == 0)
+                {
+                    Serial.println("Environment Normal");
                 }
             }
         }
