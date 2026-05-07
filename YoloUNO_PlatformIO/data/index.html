@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOLO IoT Command Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=6">
+  <script src="https://cdn.jsdelivr.net/npm/raphael@2.3.0/raphael.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/justgage@1.3.5/justgage.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+
+  <div class="dashboard-layout">
+    
+    <aside class="side-navbar">
+      <div class="brand-zone">
+        <div class="hexagon-icon"><i class="fa-solid fa-microchip"></i></div>
+        <div class="brand-title">YOLO<span>CORE</span></div>
+      </div>
+
+      <div class="nav-menu">
+        <div class="nav-subtitle">BẢNG ĐIỀU KHIỂN</div>
+        <button class="nav-item active" onclick="showSection('home', event)">
+          <i class="fa-solid fa-table-cells-large"></i> Giám sát tổng quan
+        </button>
+        <button class="nav-item" onclick="showSection('device', event)">
+          <i class="fa-solid fa-network-wired"></i> Cụm thiết bị (Relay)
+        </button>
+        
+        <div class="nav-subtitle" style="margin-top: 30px;">HỆ THỐNG</div>
+        <button class="nav-item" onclick="showSection('settings', event)">
+          <i class="fa-solid fa-sliders"></i> Cấu hình MQTT
+        </button>
+      </div>
+
+      <div class="system-status-box">
+        <div id="ws-status" class="ws-disconnected">
+          <div class="pulse-dot"></div>
+          <span>Đang tìm tín hiệu...</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-workspace">
+      
+      <section id="home" class="panel-section fade-in">
+        <header class="panel-header">
+          <div>
+            <h1 class="panel-title">Môi trường & AI TinyML</h1>
+            <p class="panel-desc">Hệ thống phân tích dữ liệu cảm biến thời gian thực</p>
+          </div>
+          <div class="time-badge"><i class="fa-regular fa-clock"></i> <span id="clock">Live Data</span></div>
+        </header>
+
+        <div class="bento-grid">
+          
+          <div class="glass-card bento-box">
+            <div class="card-title"><i class="fa-solid fa-temperature-arrow-up" style="color: #ff4757;"></i> Cảm biến Nhiệt độ</div>
+            <div class="gauge-wrapper" id="gauge_temp"></div>
+          </div>
+
+          <div class="glass-card bento-box">
+            <div class="card-title"><i class="fa-solid fa-droplet" style="color: #1e90ff;"></i> Cảm biến Độ ẩm</div>
+            <div class="gauge-wrapper" id="gauge_humi"></div>
+          </div>
+
+          <div class="glass-card bento-box ai-span">
+            <div id="ai-alert" class="ai-container safe">
+              <div class="ai-icon-zone"><i class="fa-solid fa-brain"></i></div>
+              <div class="ai-data-zone">
+                <h3 id="ai-status-text">Đang đồng bộ dữ liệu thuật toán...</h3>
+                <div class="ai-metrics">
+                  <div class="metric-badge">Loss Nhiệt: <span id="ai-score-temp">0.000</span></div>
+                  <div class="metric-badge">Loss Ẩm: <span id="ai-score-humi">0.000</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="device" class="panel-section fade-in" style="display:none;">
+        <header class="panel-header">
+          <div>
+            <h1 class="panel-title">Trung tâm điều khiển GPIO</h1>
+            <p class="panel-desc">Mạng lưới Relay và Actuator cục bộ</p>
+          </div>
+          <button class="btn-glow" onclick="openAddRelayDialog()">
+            <i class="fa-solid fa-plus"></i> CẤP PHÁT THIẾT BỊ
+          </button>
+        </header>
+
+        <div class="hardware-grid" id="relayContainer"></div>
+      </section>
+
+      <section id="settings" class="panel-section fade-in" style="display:none;">
+        <header class="panel-header">
+          <div>
+            <h1 class="panel-title">Thiết lập kết nối mạng</h1>
+            <p class="panel-desc">Thông số Router và MQTT Broker cục bộ</p>
+          </div>
+        </header>
+
+        <div class="glass-card settings-wrapper">
+          <form id="settingsForm" class="complex-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tên mạng Wi-Fi (SSID)</label>
+                <div class="input-prepend">
+                  <i class="fa-solid fa-wifi"></i>
+                  <input type="text" id="ssid" placeholder="Nhập SSID" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Mật khẩu Wi-Fi</label>
+                <div class="input-prepend">
+                  <i class="fa-solid fa-lock"></i>
+                  <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>IP MQTT Broker (Local/Cloud)</label>
+                <div class="input-prepend">
+                  <i class="fa-solid fa-server"></i>
+                  <input type="text" id="mqtt_server" placeholder="Ví dụ: 192.168.1.100" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Cổng MQTT (Port)</label>
+                <div class="input-prepend">
+                  <i class="fa-solid fa-plug"></i>
+                  <input type="number" id="mqtt_port" placeholder="Mặc định: 1883" required>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-submit-zone">
+              <button type="submit" class="btn-glow execute-btn"><i class="fa-solid fa-terminal"></i> LƯU VÀ NẠP XUỐNG ESP32</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="addRelayDialog" class="modal-backdrop" style="display:none;">
+    <div class="glass-modal fade-in">
+      <div class="modal-header">
+        <i class="fa-solid fa-microchip"></i>
+        <h2>Khai báo GPIO mới</h2>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Tên định danh (vd: Đèn, Quạt, Bơm)</label>
+          <input type="text" id="relayName" placeholder="Nhập tên thiết bị">
+        </div>
+        <div class="form-group">
+          <label>Địa chỉ chân GPIO</label>
+          <input type="number" id="relayGPIO" placeholder="Ví dụ: 21, 48">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-outline" onclick="closeAddRelayDialog()">Hủy bỏ</button>
+        <button class="btn-glow" onclick="saveRelay()">Xác nhận cấp phát</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmDeleteDialog" class="modal-backdrop" style="display:none;">
+    <div class="glass-modal warning-modal fade-in">
+      <div class="modal-header">
+        <i class="fa-solid fa-triangle-exclamation" style="color: #ff4757; font-size: 30px;"></i>
+        <h2 style="color: #ff4757;">Cảnh báo gỡ bỏ</h2>
+      </div>
+      <p style="text-align: center; color: #64748b; margin-bottom: 20px;">Bạn có chắc chắn muốn ngắt kết nối thiết bị này khỏi hệ thống?</p>
+      <div class="modal-actions">
+        <button class="btn-outline" onclick="closeConfirmDelete()">Quay lại</button>
+        <button class="btn-glow danger-btn" onclick="confirmDelete()">Gỡ bỏ hoàn toàn</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js?v=6"></script>
+</body>
+</html>
