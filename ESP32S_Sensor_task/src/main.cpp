@@ -4,7 +4,7 @@
 #include "global.h"
 #include "temp_humi_monitor.h"
 
-// Khai báo hàm để main.cpp hiểu
+// Khai báo hàm 
 void task_button_demo(void *pvParameters);
 
 void setup() {
@@ -18,10 +18,10 @@ void setup() {
 
     WiFi.disconnect(); 
 
-    // Bắn Task Sensor cũ
+    //Task Sensor
     xTaskCreate(temp_humi_monitor_task, "SensorTask", 4096, NULL, 1, NULL);
     
-    // 👉 THÊM DÒNG NÀY: Bắn Task quản lý nút bấm
+    //Task quản lý nút bấm
     xTaskCreate(task_button_demo, "ButtonTask", 2048, NULL, 1, NULL);
 }
 

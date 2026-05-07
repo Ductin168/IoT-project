@@ -1,9 +1,4 @@
 #include "global.h"
 
-String WIFI_SSID = "";
-String WIFI_PASS = "";
-String CORE_IOT_TOKEN = "";
-String CORE_IOT_SERVER = "";
-String CORE_IOT_PORT = "";
-
+// Chỉ giữ lại Semaphore để đồng bộ hóa nếu cần, các chuỗi cấu hình đã bị xóa bỏ
 SemaphoreHandle_t xBinarySemaphoreInternet = xSemaphoreCreateBinary();

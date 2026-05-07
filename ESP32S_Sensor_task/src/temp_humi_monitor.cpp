@@ -30,7 +30,6 @@ bool edit_temp_mode = true; // true = Đang chỉnh Nhiệt độ, false = Đang
 // TASK 1: XỬ LÝ NÚT BẤM (GPIO 6) ĐỂ CHUYỂN TRẠNG THÁI
 // =================================================================
 void task_button_demo(void *pvParameters) {
-    // Nên đổi sang chân GPIO 13 hoặc 14 để tránh các chân có tính năng Touch (như chân 4)
     const int BUTTON_PIN = 14; 
     pinMode(BUTTON_PIN, INPUT_PULLUP); 
     
@@ -45,8 +44,8 @@ void task_button_demo(void *pvParameters) {
         // --- CƠ CHẾ LỌC NHIỄU (DEBOUNCE) ---
         // Nếu thấy tín hiệu thay đổi, đợi 50ms rồi đọc lại xem có thực sự đổi không
         if (reading != lastState) {
-            vTaskDelay(pdMS_TO_TICKS(50)); // Đợi rung động cơ khí ổn định
-            reading = digitalRead(BUTTON_PIN); // Đọc lại lần nữa
+            vTaskDelay(pdMS_TO_TICKS(50)); 
+            reading = digitalRead(BUTTON_PIN); 
         }
 
         // 1. Bắt đầu nhấn (Chuyển từ HIGH sang LOW)
