@@ -27,7 +27,7 @@ IoT-project/
     └── TinyGateway.py        # Bridge đồng bộ dữ liệu (Telemetry & Cloud RPC)
 ```
 
-🛠️ Hướng Dẫn Cài Đặt & Triển Khai
+## 🛠️ Hướng Dẫn Cài Đặt & Triển Khai
 1. Triển Khai Firmware (PlatformIO)
 Sử dụng Visual Studio Code với extension PlatformIO:
 
@@ -51,14 +51,14 @@ Cấu hình: Khi cấp nguồn, nếu thiết bị chưa kết nối WiFi, nó s
 
 Giám sát: Truy cập IP đã cấu hình trên trình duyệt để sử dụng Dashboard. Hệ thống sẽ tự động đồng bộ dữ liệu lên CoreIOT Cloud.
 
-🕹️ Chế Độ Kiểm Thử (Test Mode)
+## 🕹️ Chế Độ Kiểm Thử (Test Mode)
 Hệ thống tích hợp cơ chế kiểm thử tại Mạch A:
 
 Nhấn giữ 10s: Bật/Tắt chế độ giả lập dữ liệu (Test Mode).
 
 Nhấn nhả nhanh (Click): Tăng giá trị mô phỏng (+1°C/Nhiệt độ, +5%/Độ ẩm) để kiểm chứng thuật toán TinyML và các thiết bị cảnh báo.
 
-👥 Nhóm Thực Hiện
+## 👥 Nhóm Thực Hiện
 Hồ Đức Tín (2213486) - Thiết kế phần cứng, RTOS, triển khai TinyML.
 
 Nguyễn Trần Như Phước (2212719) - Web Server, WebSocket UI, Python Local Gateway.
