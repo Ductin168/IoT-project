@@ -25,7 +25,7 @@ IoT-project/
 └── TinyML_ESP32/             # Local Edge Gateway (PC) & Scripts
     ├── TinyMQTT.py           # Local MQTT Broker (Port 1883)
     └── TinyGateway.py        # Bridge đồng bộ dữ liệu (Telemetry & Cloud RPC)
-
+```
 
 🛠️ Hướng Dẫn Cài Đặt & Triển Khai
 1. Triển Khai Firmware (PlatformIO)
